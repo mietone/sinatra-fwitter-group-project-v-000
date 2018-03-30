@@ -5,14 +5,14 @@ class UsersController < ApplicationController
   end
 
   post '/signup' do
-    @user = User.new(params)
+    user = User.new(params)
 
-    if !params.empty?
-      @user.save
-      session[:id] = @user.id
-      redirect "/tweets"
-    else
+    if params[:username] == "" || params[:email] == "" || params[:password] == ""
       redirect "/users/signup"
+    else
+      user.save
+      session[:id] = user.id
+      redirect "/tweets"
     end
   end
 
