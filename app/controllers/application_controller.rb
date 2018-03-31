@@ -17,23 +17,30 @@ class ApplicationController < Sinatra::Base
 
   helpers do
 
-    def logged_in?(session)
+    def logged_in?
       !!current_user
     end
 
     def current_user
-      @current_user ||= User.find(session[:id]) if session["id"]
+      @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
     end
+      # if session[:user_id]
+      #   @current_user ||= User.where(id: session[:user_id]).first
+      # end
 
     def login(session)
       # check if a user with this user_id actually exists
       # if so, set the session
       @user = User.find(session[:id])
       if @user && @user.authenticate(password)
-        session[:id] = @user.id
+        session[:user_id] = @user.id
       else
         redirect '/login'
       end
+    end
+
+    def logout!
+      session[:user_id] = nil
     end
 
   end
